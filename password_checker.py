@@ -1,9 +1,4 @@
-
 import re
-
-"""
-    Password Checker
-"""
 
 class PasswordChecker():
     def __init__(self, given_password) -> None:
@@ -18,11 +13,12 @@ class PasswordChecker():
                                     "iloveyou"
                                 ]
         self.given_password = given_password
+        print(self.given_password)
         
     def isMinimumLength(self) -> bool:
         return len(self.given_password) >= self.min_length
 
-    def hasInvalidChars(self) -> bool:
+    def hasNonAcceptedChars(self) -> bool:
         valid_chars_pattern = r"[^a-zA-Z0-9" + self.valid_chars + "]"
         return bool(re.findall(valid_chars_pattern, self.given_password))
 
@@ -35,30 +31,22 @@ class PasswordChecker():
         return bool(re.search(charsToFind, self.given_password))
 
     def hasRequiredChars(self) -> bool:
-        if self.findChars(r"[A-Z]") and self.findChars(r"[a-z]") and self.findChars(r"[0-9]"):
+        if self.findChars(r"[a-zA-Z0-9]"):
             valid_chars_pattern = r"[!\$%&\(\)\?\*\-_@#']"
             if self.findChars(valid_chars_pattern):
                 return True
         return False
 
-    def isPasswordStrong(self) -> bool:
-        if (self.isMinimumLength()):
-            print("MinimumLength: YES")
-        else:
-            print("MinimumLength: NO")
+    def isPasswordStrong(self) -> bool:     
+        if not self.isMinimumLength():
+            return False
+        if not self.isBanned():
+            return False
+        if self.hasRequiredChars():
+            return False
+        if not self.hasNonAcceptedChars():
+            return False
         
-        if (self.hasInvalidChars()):
-            print("hasInvalidChars: YES")
-        else:
-            print("hasInvalidChars: NO")
-        
-        if (self.isBanned()):
-            print("isBanned: YES")
-        else:
-            print("isBanned: NO")
-        
-        if (self.hasRequiredChars()):
-            print("hasRequiredChars: YES")
-        else:
-            print("hasRequiredChars: NO")
+        return True
+
         
